@@ -1,0 +1,41 @@
+<?php require_once(dirname(__FILE__) . '/header.php'); ?>
+
+	<?php
+	if($isSingle)
+	{
+		echo '<div id="content" class="widecolumn" role="main">' . "\n";
+	}
+	else
+	{
+		echo '<div id="content" class="narrowcolumn" role="main">' . "\n";
+	}
+	if($postType == 'post')
+	{
+		$classes = 'post hentry post-' . $postId;
+		echo '<div class="navigation">' . "\n";
+		echo '<div class="alignleft"></div>' . "\n";
+		echo '<div class="alignright"></div>' . "\n";
+		echo '</div>' . "\n";
+	}
+	else
+	{
+		$classes = 'post';
+	}
+?>
+		<div class="<?php e($classes); ?>" id="post-<?php e($postId); ?>">
+			<h2><?php e($title); ?></h2>
+			<div class="entry">
+				<?php 
+				echo $content;
+				?>
+				<?php /* wp_link_pages(array('before' => '<p><strong>Pages:</strong> ', 'after' => '</p>', 'next_or_number' => 'number')); */ ?>
+
+			</div>
+		</div>
+	<?php /* edit_post_link('Edit this entry.', '<p>', '</p>'); */ ?>
+	
+	</div>
+
+<?php require_once(dirname(__FILE__) . '/sidebar.php');
+
+require_once(dirname(__FILE__) . '/footer.php');

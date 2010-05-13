@@ -1,0 +1,25 @@
+<?php require_once(dirname(__FILE__) . '/header.php'); ?>
+		<div id="content" class="narrowcolumn" role="main">
+<?php
+
+foreach($objects as $post)
+{
+	echo '<div class="post-' . $post['ID'] . ' post hentry" id="post-' . $post['ID'] . '">' . "\n";
+	echo '<h2><a href="#" rel="bookmark" title="' . _e('Permanent link to ' . $post['post_title']) . '">' . _e($post['post_title']) . '</a></h2>' . "\n";
+	echo '<small>' . _e($post['post_date']) . ' by ' . _e($post['post_author']) . '</small>' . "\n";
+	echo '<div class="entry">' . "\n";
+	echo $post['post_content'] . "\n";
+	echo '</div>' . "\n";
+	echo '<div class="postmetadata"> Posted in <a href="#" title="View all posts in some-category">Category</a> | <a href="#" title="' . _e('Comment on ' . $post['post_title']) . '">' . $post['comment_count'] . ' comment' . ($post['comment_count'] != 1 ? 's' : '') . ' &#187;</a></p></div>' . "\n";
+	echo '</div>' . "\n";
+}
+
+?>		
+		</div>
+
+<?php 
+
+require_once(dirname(__FILE__) . '/sidebar.php');
+
+
+require_once(dirname(__FILE__) . '/footer.php');
