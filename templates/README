@@ -1,0 +1,10 @@
+This theme is included as an example: it's a variant of the WordPress
+default theme, which itself is based upon Kubrick.
+
+The theme CSS and image files are lifted straight from WordPress itself,
+and so are licensed under the terms of the GNU General Public License.
+
+The PHP files were written for Eregansu, but designed to match the output
+of WordPress. As far as I'm concerned they can be released into the public
+domain, but they may be considered a derivative of the WordPress equivalents
+and so covered by the terms of the GNU General Public License also.
