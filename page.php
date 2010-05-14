@@ -138,6 +138,10 @@ class WordpressPage extends Page
 				$info['templateName'] = $info['post_type'] . '.phtml';
 			}
 		}
+		if(isset($info['meta']['pageType']))
+		{
+			$pageType .= ' ' . $info['meta']['pageType'];
+		}
 		$info['page_type'] = $pageType;
 		$req->data = $info;
 		$inst = $this->routeInstance($req, $info);
