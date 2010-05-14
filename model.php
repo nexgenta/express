@@ -29,6 +29,8 @@
 
 uses('model');
 
+if(!defined('WORDPRESS_IRI')) define('WORDPRESS_IRI', '');
+
 class WordPress extends Model
 {
 	protected $blogId;
@@ -96,7 +98,10 @@ class WordPress extends Model
 		if($this->options === null)
 		{
 			$this->options = array();
-			$opts = $this->db->rows('SELECT * FROM {' . $this->db_options . '} WHERE "autoload" = ?', 'yes');
+			if($this->db)
+			{
+				$opts = $this->db->rows('SELECT * FROM {' . $this->db_options . '} WHERE "autoload" = ?', 'yes');
+			}
 			foreach($opts as $opt)
 			{
 				$this->options[$opt['option_name']] = $opt['option_value'];
@@ -112,12 +117,23 @@ class WordPress extends Model
 		{
 			return $this->options[$name];
 		}
-		$this->options[$name] = $this->db->value('SELECT "option_value" FROM {' . $this->db_options . '} WHERE "option_name" = ?', $name);
+		if($this->db)
+		{
+			$this->options[$name] = $this->db->value('SELECT "option_value" FROM {' . $this->db_options . '} WHERE "option_name" = ?', $name);
+		}
+		else
+		{
+			$this->options[$name] = null;
+		}
 		return $this->options[$name];
 	}
 	
 	public function terms($taxonomy = null, $parent = null)
 	{
+		if(!$this->db)
+		{
+			return array();
+		}
 		$args = array();
 		$q = 'SELECT "tt".*, "t".* FROM {' . $this->db_terms . '} "t", {' . $this->db_term_taxonomy . '} "tt" WHERE "tt"."term_id" = "t"."term_id"';
 		if($taxonomy !== null)
@@ -135,16 +151,28 @@ class WordPress extends Model
 	
 	public function termWithSlug($slug)
 	{
+		if(!$this->db)
+		{
+			return null;
+		}
 		return $this->db->row('SELECT "tt".*, "t".* FROM {' . $this->db_terms . '} "t", {' . $this->db_term_taxonomy . '} "tt" WHERE "tt"."term_id" = "t"."term_id" AND "t"."slug" = ?', $slug);
 	}
 
 	public function termIdWithSlug($slug)
 	{
+		if(!$this->db)
+		{
+			return null;
+		}
 		return $this->db->value('SELECT "t"."term_id" FROM {' . $this->db_terms . '} "t", {' . $this->db_term_taxonomy . '} "tt" WHERE "tt"."term_id" = "t"."term_id" AND "t"."slug" = ?', $slug);
 	}
 	
 	public function postWithId($postId, $type = 'post', $status = 'publish')
 	{
+		if(!$this->db)
+		{
+			return null;
+		}
 		if(null === ($post = $this->db->row('SELECT * FROM {' . $this->db_posts . '} WHERE "ID" = ? AND "post_type" = ? AND "post_status" = ?', $postId, $type, $status)))
 		{
 			return null;
@@ -165,6 +193,10 @@ class WordPress extends Model
 	
 	public function postWithNameAndParent($postName, $parentId, $type = 'post', $status = 'publish')
 	{
+		if(!$this->db)
+		{
+			return null;
+		}
 		if(null === ($post = $this->db->row('SELECT * FROM {' . $this->db_posts . '} WHERE "post_name" = ? AND "post_parent" = ? AND "post_type" = ? AND "post_status" = ?', $postName, intval($parentId), $type, $status)))
 		{
 			return null;
@@ -185,6 +217,10 @@ class WordPress extends Model
 	
 	public function latestPost($type = 'post', $termId = null)
 	{
+		if(!$this->db)
+		{
+			return null;
+		}
 		$args = array();
 		$q = 'SELECT "p".* FROM {' . $this->db_posts . '} "p"';
 		if($termId !== null)
@@ -205,6 +241,10 @@ class WordPress extends Model
 
 	public function latestPosts($type = 'post', $termId = null, $limit = 10, $offset = 0)
 	{
+		if(!$this->db)
+		{
+			return array();
+		}
 		$args = array();
 		$q = 'SELECT "p".* FROM {' . $this->db_posts . '} "p"';
 		if($termId !== null)
